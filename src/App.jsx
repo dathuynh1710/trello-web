@@ -4,10 +4,14 @@ import Stack from '@mui/material/Stack'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AlarmIcon from '@mui/icons-material/Alarm'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
+import Typography from '@mui/material/Typography'
 function App() {
   return (
     <>
       <div>dathuynh</div>
+      <Typography variant='body2' color='text.secondary'>
+        Hello dathuynh
+      </Typography>
       <Button variant='text'>Text</Button>
       <Button variant='contained'>Contained</Button>
       <Button variant='outlined'>Outlined</Button>
