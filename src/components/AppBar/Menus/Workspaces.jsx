@@ -26,7 +26,7 @@ function Workspaces() {
       <Button
         sx={{ color: 'white' }}
         id='basic-button-workspaces'
-        aria-controls={open ? 'basic-menu-workpaces' : undefined}
+        aria-controls={open ? 'basic-menu-workspaces' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
@@ -35,7 +35,7 @@ function Workspaces() {
         Workspaces
       </Button>
       <Menu
-        id='basic-menu-workpaces'
+        id='basic-menu-workspaces'
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
