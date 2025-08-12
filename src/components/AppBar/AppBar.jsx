@@ -39,8 +39,8 @@ function AppBar() {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <AppsIcon sx={{ color: 'white' }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <SvgIcon component={TrelloIcon} fontSize='small' inheritViewBox sx={{ color: 'white' }} />
-          <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>
+          <SvgIcon component={TrelloIcon} fontSize="small" inheritViewBox sx={{ color: 'white' }} />
+          <Typography variant="span" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>
             Trello
           </Typography>
         </Box>
@@ -51,7 +51,7 @@ function AppBar() {
           <Templates />
           <Button
             sx={{ color: 'white', border: 'none', '&:hover': { border: 'none' } }}
-            variant='outlined'
+            variant="outlined"
             startIcon={<LibraryAddIcon />}
           >
             Create
@@ -60,24 +60,26 @@ function AppBar() {
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <TextField
-          id='outlined-search'
-          label='Search...'
-          type='text'
-          size='small'
+          id="outlined-search"
+          label="Search..."
+          type="text"
+          size="small"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           InputProps={{
             startAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position="start">
                 <SearchIcon sx={{ color: 'white' }} />
               </InputAdornment>
             ),
             endAdornment: (
-              <CloseIcon
-                fontSize='small'
-                sx={{ color: searchValue ? 'white' : 'transparent', cusor: 'pointer' }}
-                onClick={() => setSearchValue('')}
-              />
+              <InputAdornment position="end">
+                <CloseIcon
+                  fontSize="small"
+                  sx={{ color: searchValue ? 'white' : 'transparent', cursor: 'pointer' }}
+                  onClick={() => setSearchValue('')}
+                />
+              </InputAdornment>
             )
           }}
           sx={{
@@ -100,12 +102,12 @@ function AppBar() {
           }}
         />
         <ModeSelect />
-        <Tooltip title='Notification'>
-          <Badge color='warning ' variant='dot' sx={{ cursor: 'pointer' }}>
+        <Tooltip title="Notification">
+          <Badge color="warning " variant="dot" sx={{ cursor: 'pointer' }}>
             <NotificationsNoneIcon sx={{ color: 'white' }} />
           </Badge>
         </Tooltip>
-        <Tooltip title='Help' sx={{ cursor: 'pointer', color: 'white' }}>
+        <Tooltip title="Help" sx={{ cursor: 'pointer', color: 'white' }}>
           <HelpOutlineIcon />
         </Tooltip>
 
