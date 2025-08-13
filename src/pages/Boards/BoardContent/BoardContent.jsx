@@ -22,7 +22,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
   // yeu cau chuot di chuyen 10px thi moi kich hoat event, fix truong hop click bi goi event
   // const pointerSensor = useSensor(PointerSensor, {
   //   activationConstraint: {
@@ -215,10 +215,9 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         const newColumnIndex = orderedColumns.findIndex((column) => column._id === over.id)
         // arrayMove: sap xep lai mang column ban dau
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
-        // console phia duoi se dung de xu ly goi API
-        // const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id)
-        // console.log('dndOrderedColumns',  dndOrderedColumns)
-        // console.log('dndOrderedColumnsIds',  dndOrderedColumnsIds)
+
+        // Goi len props function moveColumns nam o component cha cao nhat (boards/_id.js)
+        moveColumns(dndOrderedColumns)
 
         // Cap nhat lai state columns ban dau sau khi da keo tha
         setOrderedColumns(dndOrderedColumns)
