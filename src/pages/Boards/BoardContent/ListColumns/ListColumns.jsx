@@ -8,17 +8,29 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import theme from '~/theme'
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter column title')
       return
     }
-    // console.log(newColumnTitle)
-    // Goi API
+
+    // Tạo dữ liệu Column để gọi API
+    const newColumnData = {
+      title: newColumnTitle
+    }
+
+    /**
+     * Gọi lên props function createNewColumn nằm ở component cha cao nhất (boards/_id.js)
+     * đưa dữ liệu Board ra ngoài Redux Global Store,
+     * và lúc này có thể gọi luôn API ở đây là xong thay vì phải lần lượt gọi ngược lên những
+     * component cha phía bên trên.
+     * - Với việc sử dụng Redux -> code Clean.
+     */
+    await createNewColumn(newColumnData)
     // Đóng trạng thái thêm Column mới và Input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -42,7 +54,7 @@ function ListColumns({ columns }) {
         }}
       >
         {columns?.map((column) => (
-          <Column key={column._id} column={column} />
+          <Column key={column._id} column={column} createNewCard={createNewCard} />
         ))}
 
         {/* Box Add new column */}
