@@ -24,7 +24,7 @@ import { isEmpty } from 'lodash'
 function Board() {
   const [board, setBoard] = useState(null)
   useEffect(() => {
-    const boardId = '6899d2928793936c73b97eca'
+    const boardId = '68a205e929cb00de24facd44'
     //Call API
     fetchBoardDetailsAPI(boardId).then((board) => {
       /**
