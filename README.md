@@ -10,6 +10,7 @@ Một ứng dụng web kanban lấy cảm hứng từ Trello, được xây dự
 - Responsive, hoạt động tốt trên desktop và tablet
 - Giao diện hiện đại, đơn giản, dễ sử dụng
 - Sử dụng thư viện Dnd-kit để kéo thả mượt mà
+- CRUD **Board, Column, Card**.
 
 ## Công Nghệ Sử Dụng
 
@@ -17,13 +18,14 @@ Một ứng dụng web kanban lấy cảm hứng từ Trello, được xây dự
 - **Vite** – Bundler nhanh cho phát triển và build
 - **MUI** – Thiết kế và bố cục giao diện
 - **Dnd kit** – Thư viện kéo thả
-- **gh-pages** – Triển khai lên GitHub Pages
+- **Vercel** – Triển khai và hosting frontend
+- **API** – Sử dụng từ [https://trello-api-4mi7.onrender.com](https://trello-api-4mi7.onrender.com) (phát triển bởi [dathuynh1710](https://github.com/dathuynh1710))
 
 ---
 
 ## Hình Ảnh Minh Họa
 
-![Ảnh minh họa](image.png)
+![Ảnh minh họa](image-demo.png)
 
 ---
 
