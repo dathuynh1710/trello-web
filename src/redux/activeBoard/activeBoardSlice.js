@@ -64,7 +64,9 @@ export const activeBoardSlice = createSlice({
 export const { updateCurrentActiveBoard } = activeBoardSlice.actions
 
 // Selectors: là nơi các components bên dưới gọi bằng useSelector() để lấy dữ liệu từ trong kho redux store ra sử dụng
-export const selectCurrentActiveBoard = (state) => state.activeBoard.currentActiveBoard
+export const selectCurrentActiveBoard = (state) => {
+  return state.activeBoard.currentActiveBoard
+}
 
 // export default activeBoardSlice.reducer
 export const activeBoardReducer = activeBoardSlice.reducer
