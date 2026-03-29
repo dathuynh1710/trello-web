@@ -3,16 +3,23 @@ import { toast } from 'react-toastify'
 import Box from '@mui/material/Box'
 import Column from './Column/Column'
 import Button from '@mui/material/Button'
-import NoteAddIcon from '@mui/icons-material/NoteAdd'
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
-import theme from '~/theme'
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+import NoteAddIcon from '@mui/icons-material/NoteAdd'
+import { cloneDeep } from 'lodash'
+import { createNewColumnAPI } from '~/apis'
+import { generatePlaceholderCard } from '~/utils/formatters'
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
+import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
+function ListColumns({ columns }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter column title')
       return
@@ -23,14 +30,27 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       title: newColumnTitle
     }
 
+    // Gọi API tạo mới column và làm mới dữ liệu state board
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id
+    })
+
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+    // Cap nhat state board
     /**
-     * Gọi lên props function createNewColumn nằm ở component cha cao nhất (boards/_id.js)
-     * đưa dữ liệu Board ra ngoài Redux Global Store,
-     * và lúc này có thể gọi luôn API ở đây là xong thay vì phải lần lượt gọi ngược lên những
-     * component cha phía bên trên.
-     * - Với việc sử dụng Redux -> code Clean.
+     * Đoạn này dính lỗi "object is not extensible" bởi đã copy/clone ra giá trị newBoard nhưng bản chất
+     * của spread operator là Shallow Copy/Clone, nên dính phải rules Immutability trong Redux Toolkit không
+     * dùng được hàm PUSH --> ta dùng Deep Copy/Clone toàn bộ Board.
      */
-    createNewColumn(newColumnData)
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    newBoard.columns.push(createdColumn)
+    newBoard.columnOrderIds.push(createdColumn._id)
+    // Cập nhật dữ liệu Board vào Redux Store
+    dispatch(updateCurrentActiveBoard(newBoard))
     // Đóng trạng thái thêm Column mới và Input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -54,12 +74,7 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
         }}
       >
         {columns?.map((column) => (
-          <Column
-            key={column._id}
-            column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails={deleteColumnDetails}
-          />
+          <Column key={column._id} column={column} />
         ))}
 
         {/* Box Add new column */}

@@ -4,10 +4,9 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import Box from '@mui/material/Box'
-import { cloneDeep } from 'lodash'
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
-import { toast } from 'react-toastify'
+import { cloneDeep } from 'lodash'
 import {
   fetchBoardDetailsAPI,
   updateCurrentActiveBoard,
@@ -15,15 +14,8 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 // import { mockData } from '~/apis/mock-data'
-import {
-  createNewCardAPI,
-  createNewColumnAPI,
-  updateBoardDetailsAPI,
-  updateColumnDetailsAPI,
-  moveCardToDifferentColumnAPI,
-  deleteColumnDetailsAPI
-} from '~/apis'
-import { generatePlaceholderCard } from '~/utils/formatters'
+import { updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardToDifferentColumnAPI } from '~/apis'
+
 function Board() {
   const dispatch = useDispatch()
   // Không dùng state của component mà chuyển qua dùng state của redux
@@ -35,55 +27,6 @@ function Board() {
     //Call API
     dispatch(fetchBoardDetailsAPI(boardId))
   }, [dispatch])
-
-  // Gọi API tạo mới column và làm mới dữ liệu state board
-  const createNewColumn = async (newColumnData) => {
-    const createdColumn = await createNewColumnAPI({
-      ...newColumnData,
-      boardId: board._id
-    })
-
-    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
-    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
-
-    // Cap nhat state board
-    /**
-     * Đoạn này dính lỗi "object is not extensible" bởi đã copy/clone ra giá trị newBoard nhưng bản chất
-     * của spread operator là Shallow Copy/Clone, nên dính phải rules Immutability trong Redux Toolkit không
-     * dùng được hàm PUSH --> ta dùng Deep Copy/Clone toàn bộ Board.
-     */
-    // const newBoard = { ...board }
-    const newBoard = cloneDeep(board)
-    newBoard.columns.push(createdColumn)
-    newBoard.columnOrderIds.push(createdColumn._id)
-    // setBoard(newBoard)
-    dispatch(updateCurrentActiveBoard(newBoard))
-  }
-
-  const createNewCard = async (newCardData) => {
-    const createdCard = await createNewCardAPI({
-      ...newCardData,
-      boardId: board._id
-    })
-
-    // Tương tự createNewColumn nên dùng cloneDeep
-    // Cap nhat state board
-    // const newBoard = { ...board }
-    const newBoard = cloneDeep(board)
-    const columnToUpdate = newBoard.columns.find((column) => column._id === createdCard.columnId)
-    if (columnToUpdate) {
-      // Nếu column rỗng: bản chất là đang chứa một cái placeholder card
-      if (columnToUpdate.cards.some((card) => card.FE_PlaceholderCard)) {
-        columnToUpdate.cards = [createdCard]
-        columnToUpdate.cardOrderIds = [createdCard._id]
-      } else {
-        columnToUpdate.cards.push(createdCard)
-        columnToUpdate.cardOrderIds.push(createdCard._id)
-      }
-    }
-    // setBoard(newBoard)
-    dispatch(updateCurrentActiveBoard(newBoard))
-  }
 
   /**
    *  goi API xu ly khi keo tha column xong
@@ -160,21 +103,6 @@ function Board() {
     })
   }
 
-  // Xử lý xóa 1 column và cards bên trong nó
-  const deleteColumnDetails = (columnId) => {
-    // Update cho chuẩn dữ liệu state board
-    const newBoard = { ...board }
-    newBoard.columns = newBoard.columns.filter((c) => c._id !== columnId)
-    newBoard.columnOrderIds = newBoard.columnOrderIds.filter((_id) => _id !== columnId)
-    // setBoard(newBoard)
-    dispatch(updateCurrentActiveBoard(newBoard))
-
-    // Goi API
-    deleteColumnDetailsAPI(columnId).then((res) => {
-      toast.success(res?.deleteResult)
-    })
-  }
-
   if (!board)
     return (
       <Box
@@ -198,9 +126,6 @@ function Board() {
       <BoardBar board={board} />
       <BoardContent
         board={board}
-        createNewColumn={createNewColumn}
-        createNewCard={createNewCard}
-        deleteColumnDetails={deleteColumnDetails}
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
