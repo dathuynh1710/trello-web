@@ -6,7 +6,7 @@ import svgr from 'vite-plugin-svgr'
 export default defineConfig({
   define: { 'process.env': process.env },
   plugins: [react(), svgr()],
-  base: '/trello-web',
+  // base: '/trello-web',
   resolve: {
     alias: [{ find: '~', replacement: '/src' }]
   }

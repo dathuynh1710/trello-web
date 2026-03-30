@@ -15,18 +15,17 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 // import { mockData } from '~/apis/mock-data'
 import { updateBoardDetailsAPI, updateColumnDetailsAPI, moveCardToDifferentColumnAPI } from '~/apis'
-
+import { useParams } from 'react-router-dom'
 function Board() {
   const dispatch = useDispatch()
   // Không dùng state của component mà chuyển qua dùng state của redux
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectCurrentActiveBoard)
-
+  const { boardId } = useParams()
   useEffect(() => {
-    const boardId = '68a205e929cb00de24facd44'
     //Call API
     dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch])
+  }, [dispatch, boardId])
 
   /**
    *  goi API xu ly khi keo tha column xong
