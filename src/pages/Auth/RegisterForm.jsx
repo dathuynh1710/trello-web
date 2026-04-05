@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
@@ -18,6 +18,8 @@ import {
   FIELD_REQUIRED_MESSAGE
 } from '~/utils/validators'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { registerUserAPI } from '~/apis'
+import { toast } from 'react-toastify'
 function RegisterForm() {
   const {
     register,
@@ -25,8 +27,18 @@ function RegisterForm() {
     formState: { errors },
     watch
   } = useForm()
+  const navigate = useNavigate()
   const submitRegister = (data) => {
-    console.log(data)
+    const { email, password } = data
+    toast
+      .promise(registerUserAPI({ email, password }), {
+        pending: 'Creating account...',
+        success: 'Account created successfully! Please check and verify your account before logging in!',
+        error: 'Failed to create account!'
+      })
+      .then((user) => {
+        navigate(`/login?registeredEmail=${user.email}`)
+      })
   }
   return (
     <form onSubmit={handleSubmit(submitRegister)}>
